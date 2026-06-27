@@ -143,7 +143,7 @@ Expected to return an object with `JSON::Collector` semantics. By default create
 processor
 ---------
 
-Expected to return a `Callable` that will take the data structure parsed from a JSON payload, and return a possibly adapted data structure to be stored by the collector.
+Expected to return a `Callable` that will take the data structure parsed from a JSON payload, and any named arguments in the request, and return a possibly adapted data structure to be stored by the collector. By default, this is a simple `Callable` that returns the data structure unchanged.
 
 AUTHOR
 ======
