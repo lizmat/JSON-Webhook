@@ -1,0 +1,27 @@
+{
+  "auth": "zef:lizmat",
+  "authors": [
+    "Elizabeth Mattijsen"
+  ],
+  "depends": {
+    "runtime": {
+      "requires": [
+        "Cro::HTTP:ver<0.8.13+>:auth<zef:cro>",
+        "JSON::Collector:ver<0.0.2+>:auth<zef:lizmat>"
+      ]
+    }
+  },
+  "description": "Provide webhook logic for processing JSON payloads",
+  "license": "Artistic-2.0",
+  "name": "JSON::Webhook",
+  "provides": {
+    "JSON::Webhook": "lib/JSON/Webhook.rakumod"
+  },
+  "raku": "6.d",
+  "tags": [
+    "JSON",
+    "CRO",
+    "WEBHOOK"
+  ],
+  "version": "0.0.1"
+}

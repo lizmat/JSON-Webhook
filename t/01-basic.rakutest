@@ -1,0 +1,63 @@
+use Test;
+use JSON::Webhook;
+
+# Needed to be able to check types
+use JSON::Collector;
+use Cro::HTTP::Router;
+
+plan 8;
+
+my $webhook = JSON::Webhook.new;
+isa-ok $webhook, JSON::Webhook;
+
+isa-ok $webhook.collector, JSON::Collector;
+isa-ok $webhook.processor, Callable;
+isa-ok $webhook.application, Cro::HTTP::Router::RouteSet;
+
+#- checking host / port defaulting logic ---------------------------------------
+sub host-port(
+  $host,
+  $port,
+  $comment,
+  $class = JSON::Webhook
+) is test-assertion {
+    subtest "testing host/port: $comment" => {
+        plan 5;
+
+        my $webhook = $class.new;
+        isa-ok $webhook, $class;
+
+        for $class, 'class', $webhook, 'instance' -> $it, $type {
+            is $it.host, $host, "is $type default host ok";
+            is $it.port, $port, "is $type default port ok";
+        }
+    }
+}
+
+{
+    my %*ENV;
+    host-port("localhost", 9999, "default default");
+}
+
+{
+    my %*ENV = :WEBHOOK_HOST<foo>, :WEBHOOK_PORT<666>;
+    host-port("foo", 666, "default from ENV");
+    {
+        my $*WEBHOOK-HOST = "bar";
+        my $*WEBHOOK-PORT = 42;
+        host-port("bar", 42, "default from dynamic");
+    }
+}
+
+{
+    my %*ENV;
+    my $host = "foobar";
+    my $port = 137;
+    class JSON::Webhook::Foo does JSON::Webhook {
+        method host() { $host }
+        method port() { $port }
+    }
+    host-port($host, $port, "default Foo", JSON::Webhook::Foo);
+}
+
+# vim: expandtab shiftwidth=4
