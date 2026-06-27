@@ -1,4 +1,6 @@
 Revision history for JSON::Webhook
 
 {{$NEXT}}
+
+0.0.1  2026-06-27T16:42:40+02:00
     - Initial version

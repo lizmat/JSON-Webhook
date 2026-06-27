@@ -3,4 +3,6 @@
 /releases
 /testing
 ?
+codeberg.json
+github.json
 *.rakucov
