@@ -128,17 +128,17 @@ These methods can be overriden by a consumer of the `JSON::Webhook` class to cus
 host
 ----
 
-Expected to return a value that can be used as a `:host` argument to `Cro::HTTP::Server.new`.
+Expected to return a value that can be used as a `:host` argument to `Cro::HTTP::Server.new`. By default returns the value of the dynamic variable `$*WEBHOOK-HOST`, the environment variable `WEBHOOK_HOST` or `"localhost"`.
 
 port
 ----
 
-Expected to return a value that can be used as a `:port` argument to `Cro::HTTP::Server.new`.
+Expected to return a value that can be used as a `:port` argument to `Cro::HTTP::Server.new`. By default returns the value of the dynamic variable `$*WEBHOOK-PORT`, the environment variable `WEBHOOK_PORT` or `9999`.
 
 collector
 ---------
 
-Expected to return an object with `JSON::Collector` semantics.
+Expected to return an object with `JSON::Collector` semantics. By default creates a `JSON::Collector` object with any additional named arguments passed.
 
 processor
 ---------

@@ -155,16 +155,22 @@ class to customize behaviour.
 =head2 host
 
 Expected to return a value that can be used as a C<:host> argument to
-C<Cro::HTTP::Server.new>.
+C<Cro::HTTP::Server.new>.  By default returns the value of the
+dynamic variable C<$*WEBHOOK-HOST>, the environment variable
+C<WEBHOOK_HOST> or C<"localhost">.
 
 =head2 port
 
 Expected to return a value that can be used as a C<:port> argument to
-C<Cro::HTTP::Server.new>.
+C<Cro::HTTP::Server.new>.  By default returns the value of the
+dynamic variable C<$*WEBHOOK-PORT>, the environment variable
+C<WEBHOOK_PORT> or C<9999>.
 
 =head2 collector
 
 Expected to return an object with C<JSON::Collector> semantics.
+By default creates a C<JSON::Collector> object with any additional
+named arguments passed.
 
 =head2 processor
 
