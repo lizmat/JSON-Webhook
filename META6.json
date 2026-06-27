@@ -3,6 +3,8 @@
   "authors": [
     "Elizabeth Mattijsen"
   ],
+  "build-depends": [
+  ],
   "depends": {
     "runtime": {
       "requires": [
@@ -18,10 +20,15 @@
     "JSON::Webhook": "lib/JSON/Webhook.rakumod"
   },
   "raku": "6.d",
+  "resources": [
+  ],
+  "source-url": "https://codeberg.org/lizmat/JSON-Webhook.git",
   "tags": [
     "JSON",
     "CRO",
     "WEBHOOK"
+  ],
+  "test-depends": [
   ],
   "version": "0.0.1"
 }

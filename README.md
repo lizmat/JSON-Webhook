@@ -1,7 +1,9 @@
+[![Actions Status](https://github.com/lizmat/JSON-Webhook/actions/workflows/linux.yml/badge.svg)](https://github.com/lizmat/JSON-Webhook/actions) [![Actions Status](https://github.com/lizmat/JSON-Webhook/actions/workflows/macos.yml/badge.svg)](https://github.com/lizmat/JSON-Webhook/actions) [![Actions Status](https://github.com/lizmat/JSON-Webhook/actions/workflows/windows.yml/badge.svg)](https://github.com/lizmat/JSON-Webhook/actions)
+
 NAME
 ====
 
-JSON::Webhook - provide webhook for processing JSON payloads
+JSON::Webhook - provide webhook logic for processing JSON payloads
 
 SYNOPSIS
 ========

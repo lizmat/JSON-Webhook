@@ -5,7 +5,10 @@ use JSON::Webhook;
 use JSON::Collector;
 use Cro::HTTP::Router;
 
-plan 8;
+plan 12;
+
+ok mkdir("todo"), "could create 'todo' directory";
+ok mkdir("done"), "could create 'done' directory";
 
 my $webhook = JSON::Webhook.new;
 isa-ok $webhook, JSON::Webhook;
@@ -59,5 +62,8 @@ sub host-port(
     }
     host-port($host, $port, "default Foo", JSON::Webhook::Foo);
 }
+
+ok rmdir("todo"), "could remove 'todo' directory";
+ok rmdir("done"), "could remove 'done' directory";
 
 # vim: expandtab shiftwidth=4
