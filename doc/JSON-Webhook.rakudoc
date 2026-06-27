@@ -32,8 +32,10 @@ use JSON::Webhook;
 # argument from the request into the data structure to be saved
 class JSON::Webhook::Channels does JSON::Webhook {
     method processor() {
-        -> %data, %nameds {
-            %data<channels> := .split(",") with %nameds<channels>;
+        -> \data, %nameds {
+            my %data = data;
+            %data<channels> := eager .split(",")
+              with %nameds<channels>;
             %data
         }
     }
