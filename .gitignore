@@ -1,7 +1,6 @@
 .precomp/
 /JSON-Webhook-*
 /releases
-/todo
-/done
+/testing
 ?
 *.rakucov

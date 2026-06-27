@@ -5,15 +5,19 @@ use JSON::Webhook;
 use JSON::Collector;
 use Cro::HTTP::Router;
 
-plan 12;
+plan 13;
 
-ok mkdir("todo"), "could create 'todo' directory";
-ok mkdir("done"), "could create 'done' directory";
+my $testing := $*TMPDIR.add("testing");
+ok $testing.mkdir, "'testing' directory created";
+my $todo = $testing.add("todo");
+ok $todo.mkdir, "'testing/todo' directory created";
+my $done = $testing.add("done");
+ok $done.mkdir, "'testing/done' directory created";;
 
-my $webhook = JSON::Webhook.new;
+my $webhook = JSON::Webhook.new(:$todo, :$done);
 isa-ok $webhook, JSON::Webhook;
 
-isa-ok $webhook.collector, JSON::Collector;
+isa-ok $webhook.collector(:$todo, :$done), JSON::Collector;
 isa-ok $webhook.processor, Callable;
 isa-ok $webhook.application, Cro::HTTP::Router::RouteSet;
 
@@ -27,7 +31,7 @@ sub host-port(
     subtest "testing host/port: $comment" => {
         plan 5;
 
-        my $webhook = $class.new;
+        my $webhook = $class.new(:$todo, :$done);
         isa-ok $webhook, $class;
 
         for $class, 'class', $webhook, 'instance' -> $it, $type {
@@ -63,7 +67,7 @@ sub host-port(
     host-port($host, $port, "default Foo", JSON::Webhook::Foo);
 }
 
-ok rmdir("todo"), "could remove 'todo' directory";
-ok rmdir("done"), "could remove 'done' directory";
+ok $todo.rmdir, "could remove 'todo' directory";
+ok $done.rmdir, "could remove 'done' directory";
 
 # vim: expandtab shiftwidth=4

@@ -1,5 +1,9 @@
-use Cro::HTTP::Router:ver<0.8.13+>:auth<zef:cro>;  # route/post/request-body/content
+# imports route/post/request-body/content
+use Cro::HTTP::Router:ver<0.8.13+>:auth<zef:cro>;
+
 use Cro::HTTP::Server:ver<0.8.13+>:auth<zef:cro>;
+
+# imports from-json/to-json
 use JSON::Collector:ver<0.0.3+>:auth<zef:lizmat>;
 
 role JSON::Webhook {
@@ -40,7 +44,7 @@ role JSON::Webhook {
         $!server.start;
         $!awaiter := Promise.new;
         react {
-            whenever $!awaiter { done }
+            whenever $!awaiter      { done                }
             whenever signal(SIGINT) { $!server.stop; exit }
         }
     }
