@@ -1,11 +1,13 @@
-use Cro::HTTP::Router:ver<0.8.13+>:auth<zef:cro>;
+use Cro::HTTP::Router:ver<0.8.13+>:auth<zef:cro>;  # route/post/request-body/content
 use Cro::HTTP::Server:ver<0.8.13+>:auth<zef:cro>;
-use JSON::Collector:ver<0.0.2+>:auth<zef:lizmat>;
+use JSON::Collector:ver<0.0.3+>:auth<zef:lizmat>;
 
 role JSON::Webhook {
     has Str()  $!host;
     has UInt() $!port;
     has        $!application;
+    has        $!server;   # the Cro::HTTP::Server if .serve called
+    has        $!awaiter;  # promise to break react/whenever on .stop
 
     submethod TWEAK(:$host, :$port, :$application --> Nil) {
         $!host        = $host        || self.WHAT.host;
@@ -21,9 +23,9 @@ role JSON::Webhook {
         &processor = self.processor(|%_) unless &processor;
 
         route {
-            post -> *%nameds {
+            post -> {
                 request-body -> \data {
-                    $collector.store(processor(data, %nameds));
+                    $collector.store(processor(data, request.query-hash));
                     content 'text/plain', "OK";
                 }
             }
@@ -31,13 +33,19 @@ role JSON::Webhook {
     }
     multi method application(JSON::Webhook:D:) { $!application }
 
-    multi method sink(JSON::Webhook:D:) { self.start }
+    multi method sink(JSON::Webhook:D:) { self.serve }
 
     method serve() {
-        my $server := Cro::HTTP::Server.new(:$!host, :$!port, :$!application);
-        $server.start;
-        react whenever signal(SIGINT) { $server.stop; exit }
+        $!server := Cro::HTTP::Server.new(:$!host, :$!port, :$!application);
+        $!server.start;
+        $!awaiter := Promise.new;
+        react {
+            whenever $!awaiter { done }
+            whenever signal(SIGINT) { $!server.stop; exit }
+        }
     }
+
+    method stop() { $!server.stop; $!awaiter.keep }
 
 #- overridable methods ---------------------------------------------------------
     method host() {

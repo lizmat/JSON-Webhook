@@ -131,6 +131,22 @@ listening on the given C<host> and C<port>, and starts serving requests
 with the given <application>.  Also installs a control-C handler for an
 orderly shutdown when control-C is pressed.
 
+=head2 stop
+
+=begin code :lang<raku>
+my $webhook = JSON::Webhook.new(:$host, :$port, :$application);
+say "starting";
+start {
+    $webhook.serve;
+    say "stopped";
+}
+...
+$webhook.stop;  # stopped
+=end code
+
+The C<stop> method will stop the server from accepting requests, and
+thus continue execution B<after> the call to C<serve>.
+
 =head1 OVERRIDABLE METHODS
 
 These methods can be overriden by a consumer of the C<JSON::Webhook>

@@ -1,4 +1,7 @@
 .precomp/
 /JSON-Webhook-*
+/releases
 /todo
 /done
+?
+*.rakucov

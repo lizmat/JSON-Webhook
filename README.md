@@ -104,6 +104,22 @@ say "stopped";
 
 The `serve` method takes an instantiated `JSON::Webhook` object, starts listening on the given `host` and `port`, and starts serving requests with the given <application>. Also installs a control-C handler for an orderly shutdown when control-C is pressed.
 
+stop
+----
+
+```raku
+my $webhook = JSON::Webhook.new(:$host, :$port, :$application);
+say "starting";
+start {
+    $webhook.serve;
+    say "stopped";
+}
+...
+$webhook.stop;  # stopped
+```
+
+The `stop` method will stop the server from accepting requests, and thus continue execution **after** the call to `serve`.
+
 OVERRIDABLE METHODS
 ===================
 

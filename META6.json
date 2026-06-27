@@ -9,7 +9,7 @@
     "runtime": {
       "requires": [
         "Cro::HTTP:ver<0.8.13+>:auth<zef:cro>",
-        "JSON::Collector:ver<0.0.2+>:auth<zef:lizmat>"
+        "JSON::Collector:ver<0.0.3+>:auth<zef:lizmat>"
       ]
     }
   },

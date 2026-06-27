@@ -1,0 +1,67 @@
+use Test;
+use JSON::Collector;
+use JSON::Webhook;
+
+plan 7;
+
+my $todo = $*TMPDIR.add("todo");
+ok $todo.mkdir, "'todo' directory created";
+my $done = $*TMPDIR.add("done");
+ok $done.mkdir, "'done' directory created";;
+
+my $collector = JSON::Collector.new(:$todo, :$done);
+isa-ok $collector, JSON::Collector;
+
+my $webhook;
+my $promise = start {
+    ($webhook = JSON::Webhook.new(:$collector)).sink;  # simulate sinking
+}
+sleep 1;  # allow server to start
+
+my %data   = foo => 42, bar => 666;
+my $data   = to-json(%data, :!pretty);
+my $pretty = to-json(%data, :pretty, :sorted-keys);
+
+my $proc := run 'curl', "http://localhost:9999?channels=dev",
+  '-H', 'Content-Type: application/json',
+  '-d', $data,
+  :out, :err;
+nok $proc.exitcode, 'payload delivered ok';
+
+my $payload = $todo.dir.head;
+isa-ok $payload, IO::Path;
+is $payload.slurp, $pretty, 'did it store it in pretty format';
+
+$webhook.stop;
+await $promise;
+pass "Stopping the server stopped .new";
+
+END {
+    .unlink with $payload;
+    .rmdir with $todo;
+    .rmdir with $done;
+}
+
+# vim: expandtab shiftwidth=4
+
+=finish
+use JSON::Fast;
+use Cro::HTTP::Router;
+use Cro::HTTP::Server;
+my $application = route {
+    post -> '', :$channels {
+        request-body -> %args {
+            %args<channels> := $channels.split(",");
+            say to-json %args, :pretty, :sorted-keys;
+            content 'text/plain', "OK";
+        }
+    }
+}
+
+dd $application.^name;
+my Cro::Service $json = Cro::HTTP::Server.new:
+    :host<10.24.113.110>, :port<9999>, :$application;
+say "starting";
+$json.start;
+say "started";
+react whenever signal(SIGINT) { $json.stop; exit; }
