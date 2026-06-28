@@ -1,6 +1,8 @@
 Revision history for JSON::Webhook
 
 {{$NEXT}}
+
+0.0.2  2026-06-28T12:37:26+02:00
     - Pass the Cro::HTTP::Request object to the processor
       Callable, instead of just a hash with the named
       arguments in the request

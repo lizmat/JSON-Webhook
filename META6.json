@@ -23,6 +23,11 @@
   "resources": [
   ],
   "source-url": "https://codeberg.org/lizmat/JSON-Webhook.git",
+  "support": {
+    "bugtracker": "https://codeberg.org/lizmat/JSON-Webhook/issues",
+    "email": "liz@raku.rocks",
+    "source": "https://codeberg.org/lizmat/JSON-Webhook.git"
+  },
   "tags": [
     "JSON",
     "CRO",
