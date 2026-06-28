@@ -28,10 +28,10 @@ use JSON::Webhook;
 # argument from the request into the data structure to be saved
 class JSON::Webhook::Channels does JSON::Webhook {
     method processor() {
-        -> \data, %nameds {
+        -> \data, \request {
             my %data = data;
             %data<channels> := eager .split(",")
-              with %nameds<channels>;
+              with request.query-hash<channels>;
             %data
         }
     }
@@ -92,7 +92,7 @@ The object with `JSON::Collector` semantics that will be used to store any incom
 
 ### :processor
 
-A `Callable` that will be called with the data structure representing the JSON payload that was received, and any names arguments that were part of the request being served. It should return the data structure that should be stored by the collector. If not specified, it will call the `processor` method, which by default returns a `Callable` that will just return the data structure of the JSON payload verbatim.
+A `Callable` that will be called with the data structure representing the JSON payload that was received, and the [`Cro::HTTP::Request`](https://cro.raku.org/docs/reference/cro-http-request) object. It should return the data structure that should be stored by the collector. If not specified, it will call the `processor` method, which by default returns a `Callable` that will just return the data structure of the JSON payload verbatim.
 
 serve
 -----
@@ -145,7 +145,7 @@ Expected to return an object with `JSON::Collector` semantics. By default create
 processor
 ---------
 
-Expected to return a `Callable` that will take the data structure parsed from a JSON payload, and any named arguments in the request, and return a possibly adapted data structure to be stored by the collector. By default, this is a simple `Callable` that returns the data structure unchanged.
+Expected to return a `Callable` that will take the data structure parsed from a JSON payload, and the [`Cro::HTTP::Request`](https://cro.raku.org/docs/reference/cro-http-request) object, and return a possibly adapted data structure to be stored by the collector. By default, this is a simple `Callable` that returns the data structure unchanged.
 
 AUTHOR
 ======

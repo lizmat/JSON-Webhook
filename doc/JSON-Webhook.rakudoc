@@ -32,10 +32,10 @@ use JSON::Webhook;
 # argument from the request into the data structure to be saved
 class JSON::Webhook::Channels does JSON::Webhook {
     method processor() {
-        -> \data, %nameds {
+        -> \data, \request {
             my %data = data;
             %data<channels> := eager .split(",")
-              with %nameds<channels>;
+              with request.query-hash<channels>;
             %data
         }
     }
@@ -113,11 +113,12 @@ object with any additional named arguments passed.
 =head3 :processor
 
 A C<Callable> that will be called with the data structure representing
-the JSON payload that was received, and any names arguments that were
-part of the request being served.  It should return the data structure
-that should be stored by the collector.  If not specified, it will call
-the C<processor> method, which by default returns a C<Callable> that
-will just return the data structure of the JSON payload verbatim.
+the JSON payload that was received, and the
+L<C<Cro::HTTP::Request>|https://cro.raku.org/docs/reference/cro-http-request>
+object.  It should return the data structure that should be stored by the
+collector.  If not specified, it will call the C<processor> method, which
+by default returns a C<Callable> that will just return the data structure
+of the JSON payload verbatim.
 
 =head2 serve
 
@@ -177,9 +178,10 @@ named arguments passed.
 =head2 processor
 
 Expected to return a C<Callable> that will take the data structure
-parsed from a JSON payload, and any named arguments in the request,
-and return a possibly adapted data structure to be stored by the
-collector.  By default, this is a simple C<Callable> that returns
+parsed from a JSON payload, and the
+L<C<Cro::HTTP::Request>|https://cro.raku.org/docs/reference/cro-http-request>
+object, and return a possibly adapted data structure to be stored by
+the collector.  By default, this is a simple C<Callable> that returns
 the data structure unchanged.
 
 =head1 AUTHOR

@@ -29,7 +29,7 @@ role JSON::Webhook {
         route {
             post -> {
                 request-body -> \data {
-                    $collector.store(processor(data, request.query-hash));
+                    $collector.store(processor(data, request));
                     content 'text/plain', "OK";
                 }
             }
@@ -63,7 +63,7 @@ role JSON::Webhook {
           !! $*WEBHOOK-PORT // %*ENV<WEBHOOK_PORT> // 9999
     }
     method collector() { JSON::Collector.new(|%_)   }
-    method processor() { -> \data, %nameds { data } }
+    method processor() { -> \data, \request { data } }
 }
 
 # vim: expandtab shiftwidth=4
